@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container form {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid #ff9900;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.container form label {
+  margin: 3px 0;
+  color: #999;
+}
+
+.container form input {
+  height: 35px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+  outline: 0;
+}
+
+.container form button {
+  height: 35px;
+  border: 0;
+  border-radius: 10px;
+  background: #ff9900;
+  margin-top: 5px;
+}
+
