@@ -3,6 +3,7 @@ import Router from 'next/router'
 import { parseCookies, setCookie } from 'nookies'
 
 import { api } from '../services/api'
+import saveAuthTokens from '../utils/saveAuthTokens'
 
 interface User {
   email: string
@@ -49,17 +50,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       const { permissions, roles, token, refreshToken } = response.data
 
-      const options = {
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: '/'
-      }
-
-      setCookie(undefined, 'nextauth.token', token, options)
-      setCookie(undefined, 'nextauth.refreshToken', refreshToken, options)
+      saveAuthTokens({ token, refreshToken })
 
       setUser({ email, permissions, roles })
-
-      api.defaults.headers['Authorization'] = `Bearer ${token}`
 
       Router.push('/dashboard')
 
