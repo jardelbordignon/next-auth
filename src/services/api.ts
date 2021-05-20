@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { parseCookies } from 'nookies'
 
-import saveAuthTokens from '../utils/saveAuthTokens'
+import { saveAuthTokens } from '../context/AuthContext'
 
 let cookies = parseCookies()
 let isRefreshing = false

@@ -1,9 +1,8 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import Router from 'next/router'
-import { parseCookies, setCookie } from 'nookies'
+import { parseCookies, setCookie, destroyCookie } from 'nookies'
 
 import { api } from '../services/api'
-import saveAuthTokens from '../utils/saveAuthTokens'
 
 interface User {
   email: string
@@ -26,7 +25,29 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
+interface SaveAuthTokensProps {
+  token: string
+  refreshToken: string
+  maxAge?: number
+  path?: string
+}
+
+
 export const AuthContext = createContext({} as AuthContextData)
+
+export function saveAuthTokens({
+  token,
+  refreshToken,
+  maxAge = 60 * 60,
+  path = '/'
+}: SaveAuthTokensProps) {
+  const options = { maxAge, path }
+
+  setCookie(undefined, 'nextauth.token', token, options)
+  setCookie(undefined, 'nextauth.refreshToken', refreshToken, options)
+
+  api.defaults.headers['Authorization'] = `Bearer ${token}`
+}
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>()
