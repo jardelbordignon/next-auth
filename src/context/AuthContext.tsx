@@ -35,6 +35,14 @@ interface SaveAuthTokensProps {
 
 export const AuthContext = createContext({} as AuthContextData)
 
+
+export function signOut() {
+  destroyCookie(undefined, 'nextauth.token')
+  destroyCookie(undefined, 'nextauth.refreshToken')
+
+  Router.push('/')
+}
+
 export function saveAuthTokens({
   token,
   refreshToken,
@@ -62,6 +70,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         setUser({ email, permissions, roles })
       })
+      .catch(() => signOut())
     }
   }, [])
 
