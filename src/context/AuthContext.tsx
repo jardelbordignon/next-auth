@@ -42,7 +42,16 @@ export function signOut(ctx = undefined) {
   destroyCookie(ctx, 'nextauth.token')
   destroyCookie(ctx, 'nextauth.refreshToken')
 
-  if (process.browser) Router.push('/')
+  if (process.browser) {
+    Router.push('/')
+  } else {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      }
+    }
+  }
 }
 
 export function saveAuthTokens({
