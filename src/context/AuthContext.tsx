@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import Router from 'next/router'
 import { parseCookies, setCookie, destroyCookie } from 'nookies'
+import { GetServerSidePropsContext } from 'next'
 
 import { api } from '../services/api'
 
@@ -26,6 +27,7 @@ interface AuthProviderProps {
 }
 
 interface SaveAuthTokensProps {
+  ctx?: GetServerSidePropsContext
   token: string
   refreshToken: string
   maxAge?: number
@@ -36,14 +38,15 @@ interface SaveAuthTokensProps {
 export const AuthContext = createContext({} as AuthContextData)
 
 
-export function signOut() {
-  destroyCookie(undefined, 'nextauth.token')
-  destroyCookie(undefined, 'nextauth.refreshToken')
+export function signOut(ctx = undefined) {
+  destroyCookie(ctx, 'nextauth.token')
+  destroyCookie(ctx, 'nextauth.refreshToken')
 
-  Router.push('/')
+  if (process.browser) Router.push('/')
 }
 
 export function saveAuthTokens({
+  ctx = undefined,
   token,
   refreshToken,
   maxAge = 60 * 60,
@@ -51,8 +54,8 @@ export function saveAuthTokens({
 }: SaveAuthTokensProps) {
   const options = { maxAge, path }
 
-  setCookie(undefined, 'nextauth.token', token, options)
-  setCookie(undefined, 'nextauth.refreshToken', refreshToken, options)
+  setCookie(ctx, 'nextauth.token', token, options)
+  setCookie(ctx, 'nextauth.refreshToken', refreshToken, options)
 
   api.defaults.headers['Authorization'] = `Bearer ${token}`
 }
